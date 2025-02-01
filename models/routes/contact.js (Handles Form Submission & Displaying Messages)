@@ -1,0 +1,28 @@
+const express = require("express");
+const Message = require("../models/Message");
+
+const router = express.Router();
+
+// Contact Form (GET)
+router.get("/", (req, res) => {
+    res.render("index");
+});
+
+// Handle Form Submission (POST)
+router.post("/submit", async (req, res) => {
+    const newMessage = new Message({
+        name: req.body.name,
+        email: req.body.email,
+        message: req.body.message
+    });
+    await newMessage.save();
+    res.redirect("/messages");
+});
+
+// Display Messages (GET)
+router.get("/messages", async (req, res) => {
+    const messages = await Message.find();
+    res.render("messages", { messages });
+});
+
+module.exports = router;
